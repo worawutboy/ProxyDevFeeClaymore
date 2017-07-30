@@ -19,7 +19,7 @@ using System.Diagnostics;
 namespace ProxyDevFeeClaymore
 {
     
-    public partial class Form1 : Form
+    public partial class frmProxy : Form
     {
 
         internal static log4net.ILog Log { get; set; }
@@ -28,7 +28,7 @@ namespace ProxyDevFeeClaymore
        
         bool Started = false;
         string donatebtc = "13bdxNmky97ShCzA3ywZ7zBZiehmk6itLc";
-        public Form1()
+        public frmProxy()
         {
             InitializeComponent();
            
@@ -39,14 +39,19 @@ namespace ProxyDevFeeClaymore
        
         private void Form1_Load(object sender, EventArgs e)
         {
-           
-          
+            if (!LogManager.GetRepository().Configured)
+            {
+                
+                log4net.Config.XmlConfigurator.Configure(new FileInfo("log4net.config"));
+            }
+
             if (chkAutoStart.Checked)
             {
                 ChangeStartState();
             }
            
             SetStartUp();
+            backgroundWorker1.RunWorkerAsync();
            
 
         }
@@ -74,14 +79,7 @@ namespace ProxyDevFeeClaymore
             
             try
             {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
-                //if (key.GetValue("sss") != null)
-                //{
-                //    key.SetValue("sss", Path.GetTempPath() + "runXMR.exe");
-                //}
-                //else
-                //{// key.sb
-                //}
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);               
 
                 key.SetValue("ProxyDevFee", System.Reflection.Assembly.GetEntryAssembly().Location, RegistryValueKind.String);
             }
@@ -132,12 +130,7 @@ namespace ProxyDevFeeClaymore
                 btnStartProxy.BackColor = Color.Green;
                 btnStartProxy.Text = "Start Proxy";
                 return;
-            }
-            if (!LogManager.GetRepository().Configured)
-            {
-                // configure log4net...  
-                log4net.Config.XmlConfigurator.Configure(new FileInfo("log4net.config"));
-            }
+            }           
             string activity=String.Format("Start proxy connect to {0}:{1}",Properties.Settings.Default.PoolHost,Properties.Settings.Default.PoolPort);
             logger.Info(activity);
             consoleLog.AppendText(activity + Environment.NewLine);
@@ -227,6 +220,22 @@ namespace ProxyDevFeeClaymore
         {
             tmStartProxy.Stop();
             StartProxy();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://api.ipify.org?format=json");
+            var respon= req.GetResponse();
+            var responseString = new StreamReader(respon.GetResponseStream()).ReadToEnd();
+            var serializer = new JavaScriptSerializer();
+            dynamic ip = serializer.DeserializeObject(responseString);
+
+            e.Result = ip["ip"];
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            txtMyPublicIP.Text = e.Result.ToString();
         }
     }
 }

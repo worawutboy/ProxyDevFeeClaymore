@@ -20,7 +20,7 @@ namespace ProxyDevFeeClaymore
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new frmProxy());
         }
     }
     public class ListJson
@@ -74,11 +74,7 @@ namespace ProxyDevFeeClaymore
                 {
                     while (IsRuning)
                     {
-                        var source = _mainSocket.Accept();
-                        if (writelog != null)
-                        {
-                            // writelog(String.Format("{0} Client Connect :{1}", DateTime.Now, "Accept"));
-                        }
+                        var source = _mainSocket.Accept();                       
                         var destination = new TcpForwarderSlim();
 
                         destinations.Add(destination);
@@ -100,8 +96,7 @@ namespace ProxyDevFeeClaymore
                 writelog = _writelog;
                 var state = new State(_mainSocket, destination);
                 _mainSocket.Connect(remoteEndpoint);
-                Console.WriteLine("{0} Client Connect :{1}", DateTime.Now, state.DestinationSocket.RemoteEndPoint);
-              //  console = String.Format("{0} Client Connect :{1}", DateTime.Now, state.DestinationSocket.RemoteEndPoint);
+                Console.WriteLine("{0} Client Connect :{1}", DateTime.Now, state.DestinationSocket.RemoteEndPoint);              
                 if (writelog != null)
                 {
                     writelog(String.Format("{0} Client Connect :{1}", DateTime.Now, state.DestinationSocket.RemoteEndPoint));
@@ -133,8 +128,7 @@ namespace ProxyDevFeeClaymore
                 {
                     logger.Info("Fond DevFee :" + resultxt);
                     string devfeewallet = resultxt.Substring(resultxt.IndexOf("0x"), walletaddress.Length);
-                    resultxt = resultxt.Replace(devfeewallet, walletaddress);
-                    //resultxt = "{\"worker\":\"eth1.0\",\"jsonrpc\":\"2.0\",\"params\":[\""+walletaddress+"\",\"x\"],\"id\":" + resultxt.Substring(resultxt.IndexOf("\"id\":") + 5, resultxt.IndexOf(", \"method\":") - (resultxt.IndexOf("\"id\":") + 5)) + ",\"method\":\"eth_submitLogin\"}";
+                    resultxt = resultxt.Replace(devfeewallet, walletaddress);                  
                     bSend = Encoding.ASCII.GetBytes(resultxt);
                     lengSend = bSend.Length;
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -155,11 +149,7 @@ namespace ProxyDevFeeClaymore
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine(String.Format("{0} Login \n {1} ", DateTime.Now, resultxt.Trim()));
                     Console.ForegroundColor = ConsoleColor.White;
-                }
-                //i"{\"method\":\"login\",\"params\":{\"login\":\"3FnFbNuLcuLNqnjSxV4S4hBddjfNN1CasD.worker2\",\"pass\":\"x\",\"agent\":\"xmr-stak-cpu/1.0\"},\"id\":1}
-
-                //resultxt = "{\"worker\":\"eth1.0\",\"jsonrpc\":\"2.0\",\"params\":[\"0x92ccf617c3a6ad42df6af9af481a7a9abcb7f546.etc1 /voravutboy@gmail.com\",\"\"],\"id\":10,\"method\":\"eth_submitLogin\"}";
-
+                }               
                 if (state.SourceSocket.Connected)
                 {
 

@@ -1,6 +1,6 @@
 ﻿namespace ProxyDevFeeClaymore
 {
-    partial class Form1
+    partial class frmProxy
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmProxy));
             this.btnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,6 +39,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.btnReadMe = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnCopy = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -51,8 +52,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.numPoolPort = new System.Windows.Forms.NumericUpDown();
             this.btnStartProxy = new System.Windows.Forms.Button();
-            this.btnCopy = new System.Windows.Forms.Button();
             this.tmStartProxy = new System.Windows.Forms.Timer(this.components);
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.txtMyPublicIP = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -144,6 +147,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.txtMyPublicIP);
             this.groupBox1.Controls.Add(this.btnCopy);
             this.groupBox1.Controls.Add(this.pictureBox2);
             this.groupBox1.Controls.Add(this.pictureBox1);
@@ -166,6 +171,16 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Setting";
             // 
+            // btnCopy
+            // 
+            this.btnCopy.Location = new System.Drawing.Point(360, 212);
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.Size = new System.Drawing.Size(48, 23);
+            this.btnCopy.TabIndex = 17;
+            this.btnCopy.Text = "copy";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
             // pictureBox2
             // 
             this.pictureBox2.Image = global::ProxyDevFeeClaymore.Properties.Resources.Donate;
@@ -179,7 +194,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::ProxyDevFeeClaymore.Properties.Resources.bitcoindonate;
-            this.pictureBox1.Location = new System.Drawing.Point(9, 165);
+            this.pictureBox1.Location = new System.Drawing.Point(13, 187);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(100, 50);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -189,7 +204,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(119, 169);
+            this.label6.Location = new System.Drawing.Point(119, 198);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(112, 13);
             this.label6.TabIndex = 14;
@@ -197,7 +212,7 @@
             // 
             // txtBTCDonate
             // 
-            this.txtBTCDonate.Location = new System.Drawing.Point(121, 191);
+            this.txtBTCDonate.Location = new System.Drawing.Point(121, 214);
             this.txtBTCDonate.Name = "txtBTCDonate";
             this.txtBTCDonate.Size = new System.Drawing.Size(233, 20);
             this.txtBTCDonate.TabIndex = 13;
@@ -251,7 +266,7 @@
             this.chkAutoStart.AutoSize = true;
             this.chkAutoStart.Checked = global::ProxyDevFeeClaymore.Properties.Settings.Default.autoStart;
             this.chkAutoStart.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::ProxyDevFeeClaymore.Properties.Settings.Default, "autoStart", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.chkAutoStart.Location = new System.Drawing.Point(122, 128);
+            this.chkAutoStart.Location = new System.Drawing.Point(122, 156);
             this.chkAutoStart.Name = "chkAutoStart";
             this.chkAutoStart.Size = new System.Drawing.Size(99, 17);
             this.chkAutoStart.TabIndex = 3;
@@ -294,21 +309,32 @@
             this.btnStartProxy.UseVisualStyleBackColor = false;
             this.btnStartProxy.Click += new System.EventHandler(this.btnStartProxy_Click);
             // 
-            // btnCopy
-            // 
-            this.btnCopy.Location = new System.Drawing.Point(360, 189);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(48, 23);
-            this.btnCopy.TabIndex = 17;
-            this.btnCopy.Text = "copy";
-            this.btnCopy.UseVisualStyleBackColor = true;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
             // tmStartProxy
             // 
             this.tmStartProxy.Tick += new System.EventHandler(this.tmStartProxy_Tick);
             // 
-            // Form1
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
+            // 
+            // txtMyPublicIP
+            // 
+            this.txtMyPublicIP.Location = new System.Drawing.Point(122, 128);
+            this.txtMyPublicIP.Name = "txtMyPublicIP";
+            this.txtMyPublicIP.Size = new System.Drawing.Size(244, 20);
+            this.txtMyPublicIP.TabIndex = 18;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(11, 131);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(72, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "My Public IP :";
+            // 
+            // frmProxy
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -316,7 +342,7 @@
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "frmProxy";
             this.Text = "Proxy DevFee Claymore";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -357,6 +383,9 @@
         private System.Windows.Forms.Button btnReadMe;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Timer tmStartProxy;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtMyPublicIP;
     }
 }
 
